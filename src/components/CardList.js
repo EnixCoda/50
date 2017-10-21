@@ -6,7 +6,9 @@ class CardList extends React.Component {
     switch (index) {
       case 0:
         if (card.label === '') return 'placeholder'
-        return card.direction
+        return card.direction +
+          (card.correct === true ? ' correct' : '') +
+          (card.correct === false ? ' wrong' : '') 
       case 1:
         return 'active'
       case 2:

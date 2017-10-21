@@ -26,6 +26,7 @@ const reducer = (state = InitialState, action) => {
           score: state.get('score') + (correct ? 1 : 0),
         })
         .setIn(`cards.${state.get('currentIndex')}.direction`.split('.'), direction)
+        .setIn(`cards.${state.get('currentIndex')}.correct`.split('.'), correct)
     case ActionTypes.FROZEN:
       return state.merge({ isFrozen: true })
     case ActionTypes.UNFROZEN:

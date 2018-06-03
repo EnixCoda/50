@@ -38,12 +38,12 @@ class App extends Component {
   }
 
   onTouchStart(e) {
-    e.nativeEvent.preventDefault()
-    this.touchStartPoint = e.nativeEvent.changedTouches[0]
+    e.preventDefault()
+    this.touchStartPoint = e.changedTouches[0]
   }
 
   onTouchEnd(e) {
-    this.touchEndPoint = e.nativeEvent.changedTouches[0]
+    this.touchEndPoint = e.changedTouches[0]
     const movementX = this.touchEndPoint.screenX - this.touchStartPoint.screenX
     const movementY = this.touchEndPoint.screenY - this.touchStartPoint.screenY
     const { move } = this.props

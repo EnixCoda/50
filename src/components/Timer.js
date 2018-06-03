@@ -1,7 +1,7 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
-export default function Timer(props) {
-  const { time, gameStart } = props
+function Timer({ time }) {
   const timeStr = time
     .toString()
     .replace(/(.)$/, '.$1s')
@@ -9,9 +9,11 @@ export default function Timer(props) {
   return (
     <div className="timer-wrapper">
       <label>time</label>
-      <label className="timer" onClick={gameStart}>
+      <label className="timer">
         {timeStr}
       </label>
     </div>
   )
 }
+
+export default connect(state => ({ time: state.get('time') }))(Timer)

@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React from 'react'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import Actions from './actions'
@@ -10,7 +11,13 @@ import Hint from './components/Hint'
 import Dashboard from './components/Dashboard'
 import './app.css'
 
-class App extends Component {
+class App extends React.PureComponent {
+  constructor() {
+    super()
+    this.onTouchEnd = this.onTouchEnd.bind(this)
+    this.onTouchStart = this.onTouchStart.bind(this)
+  }
+
   componentDidMount() {
     const { move } = this.props
     this.keyDownListener = document.addEventListener('keydown', e => {
@@ -54,32 +61,38 @@ class App extends Component {
   }
 
   render() {
-    const { time, timer, gameStart, score, cards, currentIndex, isFrozen } = this.props
+    const { gameStart, score, total, cards, currentIndex, isFrozen, timer } = this.props
     return (
-      <div className="container" onTouchEnd={this.onTouchEnd.bind(this)} onTouchStart={this.onTouchStart.bind(this)}>
-        <Timer time={time} />
-        <Score score={score} total={cards.length - 1} />
-        <CardList cards={cards} currentIndex={currentIndex} showCards={!!timer} />
+      <div className="container" onTouchEnd={this.onTouchEnd} onTouchStart={this.onTouchStart}>
+        <Timer />
+        <Score score={score} total={total} />
+        <CardList cards={cards} currentIndex={currentIndex} showCards={Boolean(timer)} />
         <Hint />
-        <Dashboard gameStart={gameStart} isFrozen={isFrozen} hidden={timer} />
+        <Dashboard gameStart={gameStart} isFrozen={isFrozen} hidden={Boolean(timer)} />
       </div>
     )
   }
 }
 
 function mapStateToProps(state) {
-  return state.toJS()
+  return {
+    score: state.get('score'),
+    cards: state.get('cards'),
+    total: state.get('cards').size - 1,
+    currentIndex: state.get('currentIndex'),
+    isFrozen: state.get('isFrozen'),
+    timer: state.get('timer'),
+  }
 }
 
 function mapDispatchToProps(dispatch, getState) {
-  return {
-    gameStart() {
-      dispatch(Actions.GAME_START())
+  return bindActionCreators(
+    {
+      gameStart: Actions.GAME_START,
+      move: Actions.MOVE,
     },
-    move(direction) {
-      dispatch(Actions.MOVE(direction))
-    },
-  }
+    dispatch
+  )
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

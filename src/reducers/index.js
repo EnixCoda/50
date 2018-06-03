@@ -1,6 +1,6 @@
 import { ActionTypes } from '../actions'
 import Immutable from 'immutable'
-const InitialState = Immutable.Map({
+const InitialState = Immutable.fromJS({
   isFrozen: false,
   cards: [],
   currentIndex: -1,

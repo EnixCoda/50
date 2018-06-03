@@ -1,7 +1,7 @@
 import React from 'react'
 import Card from './Card'
 
-class CardList extends React.Component {
+class CardList extends React.PureComponent {
   getRenderClassName(index, card) {
     switch (index) {
       case 0:
@@ -29,14 +29,16 @@ class CardList extends React.Component {
     const CARDS_TO_RENDER = 6
     const cardsToRender = []
     let i = Math.max(0, currentIndex - CARDS_TO_RENDER + 2)
-    while (currentIndex >= 0 && i <= currentIndex + 1) {
-      cardsToRender.unshift(cards[i++])
+    if (currentIndex >= 0) {
+      while (i <= currentIndex + 1) {
+        cardsToRender.unshift(cards.get(i++))
+      }
     }
 
     return (
       <div className="card-list">
         {showCards &&
-          cardsToRender.reverse().map((card, index) => (
+          cardsToRender.reverse().map(_ => _.toJS()).map((card, index) => (
             // reverse to prevent overlapped by later cards
             <Card
               className={this.getRenderClassName(cardsToRender.length - index - 1, card)}

@@ -45,10 +45,6 @@ const generateCards = (amount = 50) => {
   const cards = []
   while (cards.length < amount) cards.push(generateCard(cards.length))
   cards.push(placeholderCard)
-  const lt = card => card.value < 10
-  const gt = card => card.value > 10
-  const eq = card => card.value === 10
-  console.log(cards.filter(lt).length, cards.filter(gt).length, cards.filter(eq).length)
   return cards
 }
 

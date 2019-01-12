@@ -9,67 +9,63 @@ import Timer from './components/Timer'
 import CardList from './components/CardList'
 import Hint from './components/Hint'
 import Dashboard from './components/Dashboard'
+import Touch from './components/Touch'
+
 import './app.css'
 
 class App extends React.PureComponent {
-  constructor() {
-    super()
-    this.onTouchEnd = this.onTouchEnd.bind(this)
-    this.onTouchStart = this.onTouchStart.bind(this)
+  componentDidMount() {
+    document.addEventListener('keydown', this.moveOnKeyDown)
   }
 
-  componentDidMount() {
+  moveOnKeyDown = e => {
     const { move } = this.props
-    this.keyDownListener = document.addEventListener('keydown', e => {
-      switch (e.key) {
-        case 'ArrowLeft':
-          return move('left')
-        case 'ArrowDown':
-          return move('down')
-        case 'ArrowRight':
-          return move('right')
-        case 'a':
-          return move('left')
-        case 's':
-          return move('down')
-        case 'd':
-          return move('right')
-        default:
-          break
-      }
-    })
+    switch (e.key) {
+      case 'ArrowLeft':
+        return move('left')
+      case 'ArrowDown':
+        return move('down')
+      case 'ArrowRight':
+        return move('right')
+      case 'a':
+        return move('left')
+      case 's':
+        return move('down')
+      case 'd':
+        return move('right')
+      default:
+        break
+    }
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.keyDownListener)
+    document.removeEventListener('keydown', this.moveOnKeyDown)
   }
 
-  onTouchStart(e) {
-    e.preventDefault()
-    this.touchStartPoint = e.changedTouches[0]
-  }
-
-  onTouchEnd(e) {
-    this.touchEndPoint = e.changedTouches[0]
-    const movementX = this.touchEndPoint.screenX - this.touchStartPoint.screenX
-    const movementY = this.touchEndPoint.screenY - this.touchStartPoint.screenY
+  onTouchMove = direction => {
     const { move } = this.props
-    const isVerticalMove = (movementY !== 0 && movementX === 0) || Math.abs(movementY) / Math.abs(movementX) > 1
-    if (isVerticalMove && movementY > 0) move('down')
-    else if (movementX > 0) move('right')
-    else if (movementX < 0) move('left')
+    switch (direction) {
+      case 'left':
+        return move('left')
+      case 'right':
+        return move('right')
+      case 'down':
+        return move('down')
+      default:
+        break
+    }
   }
 
   render() {
     const { gameStart, score, total, cards, currentIndex, isFrozen, timer } = this.props
     return (
-      <div className="container" onTouchEnd={this.onTouchEnd} onTouchStart={this.onTouchStart}>
+      <Touch className="container" onTouchMove={this.onTouchMove}>
         <Timer />
         <Score score={score} total={total} />
         <CardList cards={cards} currentIndex={currentIndex} showCards={Boolean(timer)} />
         <Hint />
         <Dashboard gameStart={gameStart} isFrozen={isFrozen} hidden={Boolean(timer)} />
-      </div>
+      </Touch>
     )
   }
 }
@@ -95,4 +91,7 @@ function mapDispatchToProps(dispatch, getState) {
   )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App)

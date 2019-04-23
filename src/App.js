@@ -11,6 +11,8 @@ import Hint from './components/Hint'
 import Dashboard from './components/Dashboard'
 import Touch from './components/Touch'
 
+import './app.less'
+
 class App extends React.PureComponent {
   componentDidMount() {
     document.addEventListener('keydown', this.moveOnKeyDown)
